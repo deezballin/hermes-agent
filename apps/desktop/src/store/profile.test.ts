@@ -12,7 +12,6 @@ const openGatewayForProfile = vi.fn(async (_profile: string) => undefined)
 const openGatewayForAgent = vi.fn(async (_connectionId: null | string, _profile: string) => undefined)
 const openSecondaryCount = vi.fn(() => 0)
 const $gateway = atom<unknown>({ id: 'live-socket', connectionState: 'open' })
-const resetStarmapGraph = vi.fn()
 
 vi.mock('@/store/gateway', () => ({
   $gateway,
@@ -38,7 +37,6 @@ vi.mock('@/hermes', () => ({
   setApiRequestProfile: vi.fn()
 }))
 vi.mock('@/lib/query-client', () => ({ invalidateProfileScopedQueries: vi.fn() }))
-vi.mock('@/store/starmap', () => ({ resetStarmapGraph }))
 
 const {
   $activeGatewayProfile,
@@ -90,7 +88,6 @@ beforeEach(() => {
   $profiles.set([])
   vi.stubGlobal('window', { hermesDesktop: { getConnection } })
   vi.mocked(invalidateProfileScopedQueries).mockClear()
-  resetStarmapGraph.mockClear()
 })
 
 afterEach(() => {
@@ -162,7 +159,6 @@ describe('profile-scoped cache invalidation', () => {
     $activeGatewayProfile.set('coder')
 
     expect(invalidateProfileScopedQueries).toHaveBeenCalled()
-    expect(resetStarmapGraph).toHaveBeenCalledTimes(1)
   })
 })
 
